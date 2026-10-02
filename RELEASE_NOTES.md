@@ -1,17 +1,37 @@
-# Suzuka's Extra Slot v1.0.0
+# Suzuka's Extra Slot v1.5.1
 
-Adds M-103 Supply FRV as a personal mission stratagem without using one of the four selectable slots.
+One free extra mission stratagem for you only. It does not use one of your four slots. You can choose from 19 stratagems in HD2 Arsenal, or in game with Mod Options Menu.
 
-**Requirements:** Bingus Shared Loader v15+ and the supported Helldivers 2 `game.dll` listed in the README.
+**Requirements:**
 
-**Install:** Import `Suzukas-Extra-Slot-v1.0.0.zip` through your mod manager, enable it alongside BSL, and deploy. Disable the earlier experimental M-103 package first.
+- Helldivers 2, Steam build 25480438 (`game.dll` SHA-256 `2E2C3B7C…C718F51E`).
+- Bingus Shared Loader v18.
+- Optional: Mod Options Menu v1.0.1.
 
-**Verification:** The original gameplay method was tested in game: M-103 could be called separately and a teammate did not receive it. This renamed build passed payload, ZIP, and Lua syntax checks. It is published as a pre-release while an in-game smoke test of the renamed package remains pending.
+**Install:** Import `Suzukas-Extra-Slot-v1.5.1.zip` in HD2 Arsenal. It replaces any older Extra Slot (same GUID). Choose the starting stratagem under **Free extra stratagem**, then deploy it with the loader.
 
-**SHA-256:** `10221B25B112E1EB6D774B0C3724A02ECAAE2874C97963146DCB6DF8EFFDFFB3`
+## Changes since v1.0.0
 
-## Smoke test
+- **19 choices** instead of M-103 only:
+  - Vehicles and exosuits: M-103, M-102, EXO-45, EXO-49, EXO-51 (?), EXO-84 (?), Tank.
+  - Orbital strikes: Orbital Laser, Smoke, Railcannon, Gas.
+  - Sentries and mines: MG-43, G-16 Gatling, MLS-4X Rocket, AC-8 Autocannon, Gas Mines.
+  - Weapons and backpacks: EAT-17, B-100 Portable Hellbomb, CQC-1 One True Flag.
+- **In-game switching** through Mod Options Menu (ESC → MODS → SUZUKA EXTRA SLOT):
+  - Pick a category, then the stratagem in that category's row.
+  - The other rows are LOCKED, so there is always exactly one free stratagem.
+  - No redeploy or restart is needed.
+  - Optional **Keep menu choice after restart**.
+- **Safer runtime.** Every write is checked against the game build, the whole stratagem table and the target record, then read back. If the game rebuilds the table, the choice is applied again. Failed reads are retried rather than treated as conflicts. On shutdown the original value is restored only if it is still the mod's own write.
+- **Clearer log.**
+  - After a game update: the actual `game.dll` hash, and no writes.
+  - When another mod writes the same field: a plain-language hint.
+  - Menu status: shown in the log.
 
-- Install this ZIP with the earlier experimental package disabled.
-- Confirm `SuzukasExtraSlot.log` reports `APPLIED_ADDITIONAL_M103_READBACK_VERIFIED`.
-- Confirm M-103 appears in the mission row, can be called in mission, and does not appear for a teammate.
+## Verification
+
+- v1.5.1 tested in game on Steam build 25480438: category menu, switching and mission use.
+- 60 offline LuaJIT tests cover all 19 mappings, repeated switching, invalid targets, version failure, table replacement, restore conditions and the menu, including the real Mod Options Menu registration code.
+- (?) EXO-51 Lumberer and EXO-84 Breacher mappings are unverified; see `STRATAGEM_MAPPING.md`.
+
+**SHA-256:** `AA59BEF1C1DB0C6E489F8FB98DC1C248F17275E4A7CBC2D2D52254496A374752`
